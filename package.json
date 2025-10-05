@@ -1,0 +1,20 @@
+{
+  "name": "postcode-address-converter",
+  "version": "1.0.0",
+  "description": "郵便番号から住所を検索するWebアプリケーション",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "dev": "vitest --ui"
+  },
+  "keywords": ["postcode", "address", "zipcode", "japan"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "vitest": "^1.0.0",
+    "@vitest/ui": "^1.0.0",
+    "jsdom": "^23.0.0"
+  },
+  "type": "module"
+}

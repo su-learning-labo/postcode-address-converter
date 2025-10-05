@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>郵便番号検索</title>
+    <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+    <div class="app">
+        <div class="container">
+            <header class="header">
+                <h1 class="title">郵便番号検索</h1>
+                <p class="subtitle">7桁の郵便番号を入力してください</p>
+            </header>
+            
+            <main class="main">
+                <div class="search-card">
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="postcode-input" 
+                            class="postcode-input"
+                            placeholder="例: 1000001" 
+                            maxlength="7"
+                            autocomplete="postal-code"
+                        >
+                    </div>
+                    
+                    <div class="result-card">
+                        <div id="result" class="result">
+                            郵便番号を入力してください
+                        </div>
+                    </div>
+                </div>
+            </main>
+            
+            <footer class="footer">
+                <p>Powered by <a href="https://zipcloud.ibsnet.co.jp/" target="_blank" rel="noopener">ZipCloud API</a></p>
+            </footer>
+        </div>
+    </div>
+    
+    <script type="module">
+        import { handlePostcodeInput } from './src/main.js';
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const postcodeInput = document.getElementById('postcode-input');
+            if (postcodeInput) {
+                postcodeInput.addEventListener('input', handlePostcodeInput);
+            }
+        });
+    </script>
+</body>
+</html>
