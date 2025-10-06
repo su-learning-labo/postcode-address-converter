@@ -118,33 +118,15 @@ jobs:
     - name: Build project
       run: npm run build
       
-    - name: Validate required secrets
-      run: |
-        : "${{ secrets.SSH_PRIVATE_KEY?Missing SSH_PRIVATE_KEY }}"
-        : "${{ secrets.SSH_HOST?Missing SSH_HOST }}"
-        : "${{ secrets.SSH_USERNAME?Missing SSH_USERNAME }}"
-        : "${{ secrets.SSH_PATH?Missing SSH_PATH }}"
-      shell: bash
-
     - name: Setup SSH
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        SSH_HOST: ${{ secrets.SSH_HOST }}
-        SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
       run: |
         mkdir -p ~/.ssh
-        printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts
+        ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
         
     - name: Deploy to Xserver
-      env:
-        SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-        SSH_HOST: ${{ secrets.SSH_HOST }}
-        SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
-        SSH_PATH: ${{ secrets.SSH_PATH }}
       run: |
-        RSYNC_SSH="ssh -i ~/.ssh/id_rsa -p $SSH_PORT -o StrictHostKeyChecking=yes"
         rsync -avz --delete \
           --exclude='.git' \
           --exclude='node_modules' \
@@ -156,17 +138,12 @@ jobs:
           --exclude='vitest.config.js' \
           --exclude='package.json' \
           --exclude='package-lock.json' \
-          -e "$RSYNC_SSH" ./ "$SSH_USERNAME@$SSH_HOST:$SSH_PATH"
+          ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_PATH }}
         
     - name: Set file permissions
-      env:
-        SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-        SSH_HOST: ${{ secrets.SSH_HOST }}
-        SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
-        SSH_PATH: ${{ secrets.SSH_PATH }}
       run: |
-        ssh -i ~/.ssh/id_rsa -p "$SSH_PORT" -o StrictHostKeyChecking=yes \
-          "$SSH_USERNAME@$SSH_HOST" "chmod -R 755 '$SSH_PATH'"
+        ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
+          "chmod -R 755 ${{ secrets.SSH_PATH }}"
         
     - name: Verify deployment
       run: |
