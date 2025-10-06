@@ -121,7 +121,7 @@ jobs:
     - name: Setup SSH
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.XSERVER_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.XSERVER_HOST }} >> ~/.ssh/known_hosts
         
@@ -138,17 +138,17 @@ jobs:
           --exclude='vitest.config.js' \
           --exclude='package.json' \
           --exclude='package-lock.json' \
-          ./ ${{ secrets.XSERVER_USER }}@${{ secrets.XSERVER_HOST }}:${{ secrets.XSERVER_PATH }}
+          ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_PATH }}
         
     - name: Set file permissions
       run: |
-        ssh ${{ secrets.XSERVER_USER }}@${{ secrets.XSERVER_HOST }} \
-          "chmod -R 755 ${{ secrets.XSERVER_PATH }}"
+        ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
+          "chmod -R 755 ${{ secrets.SSH_PATH }}"
         
     - name: Verify deployment
       run: |
         echo "Deployment completed successfully!"
-        echo "Application URL: https://${{ secrets.XSERVER_DOMAIN }}"
+        echo "Application URL: https://apps.i-iide.com/postcode-address-converter"
 
   security:
     name: Security Scan
