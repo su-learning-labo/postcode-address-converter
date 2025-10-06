@@ -158,7 +158,7 @@ npm run dev
 ## 🚀 デプロイメント
 
 ### GitHub Pages（開発・テスト用）
-- **URL**: `https://[username].github.io/postcode-address-converter`
+- **URL**: `https://su-learninglabo.github.io/postcode-address-converter`
 - **自動デプロイ**: mainブランチへのプッシュ時
 - **手動デプロイ**: Actions タブから実行可能
 
