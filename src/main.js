@@ -56,7 +56,6 @@ export async function searchAddressByPostcode(postcode) {
       success: true,
       address: address
     };
-
   } catch (error) {
     return {
       success: false,
