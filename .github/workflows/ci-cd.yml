@@ -136,13 +136,18 @@ jobs:
     - name: Setup SSH
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+        # SSH接続テスト
+        ssh -o ConnectTimeout=10 -o BatchMode=yes -o StrictHostKeyChecking=no \
+          ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "echo 'SSH接続成功'" || true
+        # known_hostsに追加
+        ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts || true
         
     - name: Deploy to Xserver
       run: |
-        rsync -avz --delete -e 'ssh -p ${{ secrets.SSH_PORT }}'\
+        rsync -avz --delete \
+          -e "ssh -i ~/.ssh/id_rsa -p ${{ secrets.SSH_PORT || 22 }} -o StrictHostKeyChecking=no" \
           --exclude='.git' \
           --exclude='node_modules' \
           --exclude='tests' \
@@ -157,7 +162,8 @@ jobs:
         
     - name: Set file permissions
       run: |
-        ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
+        ssh -i ~/.ssh/id_rsa -p ${{ secrets.SSH_PORT || 22 }} -o StrictHostKeyChecking=no \
+          ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
           "chmod -R 755 ${{ secrets.SSH_PATH }}"
         
     - name: Verify deployment
