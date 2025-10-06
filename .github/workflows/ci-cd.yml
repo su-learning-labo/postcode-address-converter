@@ -127,7 +127,7 @@ jobs:
         
     - name: Deploy to Xserver
       run: |
-        rsync -avz --delete \
+        rsync -avz --delete -e 'ssh -p ${{{ secrets.SSH_PORT }}}'\
           --exclude='.git' \
           --exclude='node_modules' \
           --exclude='tests' \
@@ -142,7 +142,7 @@ jobs:
         
     - name: Set file permissions
       run: |
-        ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
+        ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
           "chmod -R 755 ${{ secrets.SSH_PATH }}"
         
     - name: Verify deployment
