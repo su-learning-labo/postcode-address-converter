@@ -155,6 +155,39 @@ npm run dev
 - **アクセシビリティ**: 高コントラストモード対応、モーション軽減設定対応
 - **視覚的フィードバック**: 住所クリック時のホバー効果
 
+## 🚀 デプロイメント
+
+### GitHub Pages（開発・テスト用）
+- **URL**: `https://[username].github.io/postcode-address-converter`
+- **自動デプロイ**: mainブランチへのプッシュ時
+- **手動デプロイ**: Actions タブから実行可能
+
+### エックスサーバー（本番環境）
+- **自動デプロイ**: mainブランチへのプッシュ時
+- **SSH接続**: セキュアなファイル転送
+- **バックアップ**: 自動バックアップ機能
+- **ヘルスチェック**: デプロイ後の自動確認
+
+#### エックスサーバーデプロイの設定
+
+1. **SSH接続の有効化**
+   - エックスサーバーのサーバーパネルでSSH設定をON
+
+2. **SSH鍵の生成と登録**
+   ```bash
+   ssh-keygen -t rsa -b 4096 -C "your-email@example.com" -f ~/.ssh/xserver_deploy
+   cat ~/.ssh/xserver_deploy.pub  # 公開鍵をコピー
+   ```
+
+3. **GitHub Secretsの設定**
+   - `XSERVER_SSH_PRIVATE_KEY`: SSH秘密鍵
+   - `XSERVER_HOST`: エックスサーバーのホスト名
+   - `XSERVER_USER`: SSH接続用ユーザー名
+   - `XSERVER_PATH`: デプロイ先パス
+   - `XSERVER_DOMAIN`: ドメイン名
+
+詳細な設定方法は [XSERVER-DEPLOY-GUIDE.md](./XSERVER-DEPLOY-GUIDE.md) を参照してください。
+
 ## 🔒 セキュリティ
 
 - **外部リンク**: `noopener,noreferrer`オプションでセキュリティ確保
