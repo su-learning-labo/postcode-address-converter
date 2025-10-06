@@ -118,6 +118,21 @@ jobs:
     - name: Build project
       run: npm run build
       
+    - name: Debug Secrets (一時的)
+      run: |
+        echo "SSH_HOST length: ${#SSH_HOST}"
+        echo "SSH_USERNAME length: ${#SSH_USERNAME}"
+        echo "SSH_PATH length: ${#SSH_PATH}"
+        echo "SSH_PORT: $SSH_PORT"
+        echo "SSH_PRIVATE_KEY length: ${#SSH_PRIVATE_KEY}"
+        # 実際の値は表示されませんが、長さで空でないか確認可能
+      env:
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+        SSH_PATH: ${{ secrets.SSH_PATH }}
+        SSH_PORT: ${{ secrets.SSH_PORT }}
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      
     - name: Setup SSH
       run: |
         mkdir -p ~/.ssh
